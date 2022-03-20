@@ -222,6 +222,11 @@ uint16_t General_MapSensorToPhysical(sensorType_t sensor_e, uint16_t val_u16)
 			deltaVal_u16 = (uint16_t)SENS_ACC_PEDAL_MAX - (uint16_t)SENS_ACC_PEDAL_MIN;
 			break;
 		}
+		case sensUnused:
+		{
+			//Ignore case
+			break;
+		}
 		default:
 		{
 			General_SendErrorCodeTo7Seg(errSensType);
@@ -278,6 +283,12 @@ StdReturn_Type General_CheckCriticalMode(sensorType_t sensor_e, uint16_t val_u16
 		case sensEngLoad:
 		{
 			criticalVal_u16 = (uint16_t)CRITICALMODE_ENG_LOAD_CRITICAL;
+			break;
+		}
+		case sensAccPedal:
+		case sensUnused:
+		{
+			//ignore message
 			break;
 		}
 		default:

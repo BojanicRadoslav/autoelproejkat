@@ -1,5 +1,5 @@
 /* Standard includes. */
-#include <stdio.h>l.g 
+#include <stdio.h> 
 #include <conio.h>
 
 /* Kernel includes. */
@@ -301,6 +301,7 @@ void Display7Seg_Task(void* pvParameters)
 			recvMode_e = msg_s.mode_e;
 
 			ErrorHandler(error_e);
+			printf("Error code: %d", error_e);
 			if (errNoError == error_e)
 			{
 
@@ -350,23 +351,17 @@ void AnalogOutput_Task(void* pvParameters)
 			&(msg_s),
 			(TickType_t)10) == pdPASS)
 		{
-			if ((modeUnused != msg_s.mode) && (modeInvalid != msg_s.mode))
+			if ((modeInvalid != msg_s.mode) && (modeUnused != msg_s.mode))
 			{
 				displayMode_e = msg_s.mode;
 			}
-			else if ((sensUnused != msg_s.sensor_type) && (sensInvalid != msg_s.sensor_type))
+
+			if ((sensInvalid != msg_s.sensor_type))
 			{
 				sensorType_e = msg_s.sensor_type;
 				setSensorValue(sensorType_e, msg_s.sensor_val, sensorData_u16);
 			}
-			else if (modeInvalid == msg_s.mode || sensInvalid == msg_s.sensor_type)
-			{
-				//error handling
-			}
-			else
-			{
-				//just for MISRA
-			}
+
 			printf("Analog task received data\n");
 			printf("\nMessage:\n");
 			printf("Mode: %d\nSensor Type: %d\nSensor Value: %d\n\n", displayMode_e, sensorType_e, msg_s.sensor_val);
@@ -426,6 +421,11 @@ void AnalogOutputHandler(mode_t mode_e, uint16_t* sensorData_u16)
 			//show Rpm and Acceleration Pedal sensor
 			column1Val_u16 = General_MapSensorToAnalogDisplay(sensorData_u16[sensRpm]);
 			column2Val_u16 = General_MapSensorToAnalogDisplay(sensorData_u16[sensAccPedal]);
+			break;
+		}
+		case modeUnused:
+		{
+			//ignore the case
 			break;
 		}
 		default:
